@@ -1,0 +1,75 @@
+- hosts: localhost
+  connection: local
+  become: true
+  tasks:
+  - name: uninstall nginx
+    apt:
+      name: nginx
+      state: absent 
+      purge: yes 
+      update_cache: true
+    register: nginx_install_output
+    
+    - name: remove service 
+      service:
+        name: nginx
+        state: stopped
+        enable: no
+        
+############################## install nginx ####################################
+
+  # - name: install nginx
+  #   apt:
+  #     name: nginx
+  #     state: present
+  #     update_cache: true
+  #   register: nginx_install_output
+
+########################### fail condition ##################################
+
+
+  # - name: fail if update cache is > 1
+  #   fail: 
+  #     msg: update cache > 1
+  #   when: nginx_install_output.cache_update_time > 1
+
+############################ copy ######################################
+
+  # - name: Copy nginx file over    #every task produces outpuuts
+  #   copy:
+  #     src: nginx.conf
+  #     dest: /etc/nginx/nginx.conf
+  #   register: nginx_config        # a variable 
+
+############################## print ####################################
+
+#   - name: Print Copy output       # prints playbook in terminal 
+#     debug: 
+#       msg: "{{nginx_config}}"     # Jinja2 format
+
+####################### fail condition if changed ##################################
+
+  # - name: fail if copy nginx_config is unchanged 
+  #   fail:
+  #     msg: nginx_config unchanged
+  #   when: nginx_config.diff.after.path == nginx_config.diff.before.path    
+  
+############################### restart ###################################
+
+  # - name: Restart nginx if needed
+  #   service:
+  #     name: nginx
+  #     state: restarted
+  #   when: nginx_config.changed == true
+
+################################ uninstall ##################################
+
+  # - name: uninstall nginx
+  #   service:
+  #     name: nginx
+  #     state: absent 
+  #     purge: yes 
+  #     update_cache: true
+  #   register: nginx_install_output
+    
+    
